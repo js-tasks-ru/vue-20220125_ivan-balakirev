@@ -1,18 +1,25 @@
 <template>
-  <div class="dropdown dropdown_opened">
-    <button type="button" class="dropdown__toggle dropdown__toggle_icon">
-      <ui-icon icon="tv" class="dropdown__icon" />
-      <span>Title</span>
+  <div class="dropdown" :class="toggleDropDown">
+    <button
+      type="button"
+      class="dropdown__toggle"
+      :class="hasIcon() ? 'dropdown__toggle_icon' : ''"
+      @click="openDropDown">
+      <ui-icon v-if="currentItem && currentItem.icon" :icon="currentItem.icon" class="dropdown__icon" />
+      <span>{{ buttonLabel }}</span>
     </button>
-
-    <div class="dropdown__menu" role="listbox">
-      <button class="dropdown__item dropdown__item_icon" role="option" type="button">
-        <ui-icon icon="tv" class="dropdown__icon" />
-        Option 1
-      </button>
-      <button class="dropdown__item dropdown__item_icon" role="option" type="button">
-        <ui-icon icon="tv" class="dropdown__icon" />
-        Option 2
+    <div v-show="dropDownOpened" class="dropdown__menu" role="listbox">
+      <button
+        v-for="option in options"
+        class="dropdown__item"
+        :class="hasIcon() ? 'dropdown__item_icon' : ''"
+        role="option"
+        type="button"
+        :value="option.value"
+        @click="fireAnEvent(option)"
+      >
+        <ui-icon v-if="option.icon" :icon="option.icon" class="dropdown__icon" />
+        {{ option.text }}
       </button>
     </div>
   </div>
@@ -23,8 +30,62 @@ import UiIcon from './UiIcon';
 
 export default {
   name: 'UiDropdown',
-
   components: { UiIcon },
+  props: {
+    options: {
+      type: Array,
+      required: true,
+    },
+    modelValue: {
+      type: String,
+    },
+    title: {
+      type: String,
+      required: true,
+    },
+  },
+  emits: ['update:modelValue'],
+  data() {
+    return {
+      dropDownOpened: false,
+      currentItem: null,
+    };
+  },
+  computed: {
+    toggleDropDown() {
+      return this.dropDownOpened ? 'dropdown_opened' : '';
+    },
+    buttonLabel() {
+      return ( this.modelValue )
+        ? this.findValue( this.modelValue ).text
+        : this.title;
+    },
+  },
+  methods: {
+    openDropDown() {
+      this.dropDownOpened = ! this.dropDownOpened;
+    },
+    fireAnEvent( option ) {
+      this.currentItem = option;
+      this.dropDownOpened = ! this.dropDownOpened;
+
+      this.$emit( 'update:modelValue', option.value );
+    },
+    findValue( id ) {
+      return this.options.find( ( item ) => {
+        if ( item.value === id ) {
+          return true;
+        }
+      } );
+    },
+    hasIcon() {
+      return !! this.options.find( ( item ) => {
+        if ( item.icon ) {
+          return true;
+        }
+      } );
+    },
+  },
 };
 </script>
 
@@ -56,12 +117,12 @@ export default {
 }
 
 .dropdown__toggle:after {
-  content: '';
+  content: "";
   position: absolute;
   top: 15px;
   right: 16px;
   transform: none;
-  background: url('~@/assets/icons/icon-chevron-down.svg') no-repeat;
+  background: url("~@/assets/icons/icon-chevron-down.svg") no-repeat;
   background-size: cover;
   display: block;
   width: 24px;
