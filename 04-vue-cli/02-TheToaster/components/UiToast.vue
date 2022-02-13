@@ -14,20 +14,14 @@ export default {
     UiIcon,
   },
   props: {
-    icon: {
-      type: String,
-    },
-    class: {
+    type: {
       type: String,
     },
     message: {
       type: String,
     },
-    id: {
-      type: Number,
-    },
   },
-  emits: ['removeToast'],
+  emits: ['remove'],
   data() {
     return {
       isVisible: true,
@@ -36,21 +30,20 @@ export default {
   },
   computed: {
     itemClass() {
-      return this.class;
+      return ( this.type === 'error' ) ? 'toast_error' : 'toast_success';
     },
     itemIcon() {
-      return this.icon;
+      return ( this.type === 'error' ) ? 'alert-circle' : 'check-circle';
     },
   },
   created() {
     this.isVisible = true;
-    const id = this.id;
     setTimeout( () => {
       this.isVisible = false;
-      this.$emit( 'removeToast', id );
+      this.$emit( 'remove', true );
     }, this.timeOut );
   },
-}
+};
 </script>
 
 <style scoped>

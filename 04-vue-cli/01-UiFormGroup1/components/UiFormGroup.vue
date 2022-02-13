@@ -1,5 +1,5 @@
 <template>
-  <div class="form-group" :class="inlineClass">
+  <div class="form-group" :class="{'form-group_inline': inline}">
     <!-- form-group_inline -->
     <label v-if="label" class="form-group__label">
       {{ label }}
@@ -20,11 +20,6 @@ export default {
     label: {
       type: String,
       required: false,
-    }
-  },
-  computed: {
-    inlineClass() {
-      return this.inline ? 'form-group_inline' : '';
     },
   },
 };
@@ -34,16 +29,16 @@ export default {
 .form-group {
   position: relative;
   margin-bottom: 24px;
-  }
+}
 
 .form-group.form-group_inline {
   display: inline-block;
   margin-bottom: 0;
-  }
+}
 
 .form-group.form-group_inline + .form-group.form-group_inline {
   margin-left: 16px;
-  }
+}
 
 .form-group__label {
   font-weight: 400;
@@ -52,5 +47,5 @@ export default {
   color: var(--body-color);
   margin-bottom: 10px;
   display: block;
-  }
+}
 </style>

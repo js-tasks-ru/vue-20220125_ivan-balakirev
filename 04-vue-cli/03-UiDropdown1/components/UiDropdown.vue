@@ -3,7 +3,7 @@
     <button
       type="button"
       class="dropdown__toggle"
-      :class="hasIcon() ? 'dropdown__toggle_icon' : ''"
+      :class="{'dropdown__toggle_icon': hasIcon}"
       @click="openDropDown">
       <ui-icon v-if="currentItem && currentItem.icon" :icon="currentItem.icon" class="dropdown__icon" />
       <span>{{ buttonLabel }}</span>
@@ -12,7 +12,7 @@
       <button
         v-for="option in options"
         class="dropdown__item"
-        :class="hasIcon() ? 'dropdown__item_icon' : ''"
+        :class="{'dropdown__item_icon': hasIcon}"
         role="option"
         type="button"
         :value="option.value"
@@ -60,6 +60,11 @@ export default {
         ? this.findValue( this.modelValue ).text
         : this.title;
     },
+    hasIcon() {
+      return this.options.some( ( item ) => {
+        return item.icon;
+      } );
+    },
   },
   methods: {
     openDropDown() {
@@ -74,13 +79,6 @@ export default {
     findValue( id ) {
       return this.options.find( ( item ) => {
         if ( item.value === id ) {
-          return true;
-        }
-      } );
-    },
-    hasIcon() {
-      return !! this.options.find( ( item ) => {
-        if ( item.icon ) {
           return true;
         }
       } );

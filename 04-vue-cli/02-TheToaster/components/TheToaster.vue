@@ -1,23 +1,20 @@
 <template>
   <div class="toasts">
-    <div v-if="isShown">
+    <div>
       <ui-toast
         v-for="toast in toasts"
         :key="toast"
-        :class="toast.class"
-        :icon="toast.icon"
+        :type="toast.type"
         :message="toast.message"
-        :id="toast.id"
-        @removeToast="removeToast"
+        @remove="remove"
       />
     </div>
-
   </div>
 </template>
 
 <script>
 import UiIcon from './UiIcon';
-import UiToast from "./UiToast";
+import UiToast from './UiToast';
 
 export default {
   name: 'TheToaster',
@@ -27,39 +24,26 @@ export default {
   },
   data() {
     return {
-      isShown: false,
-      toastClass: '',
-      toastIcon: '',
-      toastMessage: '',
       toasts: [],
-      id: 0,
-    }
+    };
   },
   methods: {
     error( message ) {
-      this.isShown = true;
-
       this.toasts.push( {
+        type: 'error',
         message: message,
-        icon: 'alert-circle',
-        class: 'toast_error',
-        id: this.id ++,
       } );
     },
     success( message ) {
-      this.isShown = true;
       this.toasts.push( {
+        type: 'success',
         message: message,
-        icon: 'check-circle',
-        class: 'toast_success',
-        id: this.id ++,
       } );
     },
-    removeToast( id ) {
-      const toasts = this.toasts.filter(function( value ){
-        return value.id !== id;
-      });
-      this.toasts = toasts;
+    remove() {
+      if ( this.toasts.length ) {
+        this.toasts.splice( 0, 1 );
+      }
     },
   },
 };
