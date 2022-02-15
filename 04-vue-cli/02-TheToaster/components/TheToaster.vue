@@ -1,14 +1,12 @@
 <template>
   <div class="toasts">
-    <div>
       <ui-toast
         v-for="toast in toasts"
-        :key="toast"
+        :key="toast.message"
         :type="toast.type"
         :message="toast.message"
         @remove="remove"
       />
-    </div>
   </div>
 </template>
 

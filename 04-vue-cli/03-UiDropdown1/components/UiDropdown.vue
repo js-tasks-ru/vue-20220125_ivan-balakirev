@@ -5,7 +5,7 @@
       class="dropdown__toggle"
       :class="{'dropdown__toggle_icon': hasIcon}"
       @click="openDropDown">
-      <ui-icon v-if="currentItem && currentItem.icon" :icon="currentItem.icon" class="dropdown__icon" />
+      <ui-icon v-if="currentItemIcon" :icon="currentItemIcon" class="dropdown__icon" />
       <span>{{ buttonLabel }}</span>
     </button>
     <div v-show="dropDownOpened" class="dropdown__menu" role="listbox">
@@ -48,7 +48,6 @@ export default {
   data() {
     return {
       dropDownOpened: false,
-      currentItem: null,
     };
   },
   computed: {
@@ -65,13 +64,19 @@ export default {
         return item.icon;
       } );
     },
+    currentItemIcon() {
+      if ( this.findValue( this.modelValue ) ) {
+        return this.findValue( this.modelValue ).icon;
+      } else {
+        return false;
+      }
+    },
   },
   methods: {
     openDropDown() {
       this.dropDownOpened = ! this.dropDownOpened;
     },
     fireAnEvent( option ) {
-      this.currentItem = option;
       this.dropDownOpened = ! this.dropDownOpened;
 
       this.$emit( 'update:modelValue', option.value );
