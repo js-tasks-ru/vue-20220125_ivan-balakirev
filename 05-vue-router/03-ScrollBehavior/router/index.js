@@ -1,7 +1,24 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-export const router = createRouter({
-  history: createWebHistory('/05-vue-router/03-ScrollBehavior'),
+export const router = createRouter( {
+  history: createWebHistory( '/05-vue-router/03-ScrollBehavior' ),
+  scrollBehavior( to, from, savedPosition ) {
+    // return desired position
+    if ( savedPosition ) {
+      return savedPosition;
+    } else if ( to.hash ) {
+      return {
+        el: to.hash,
+      };
+    } else if ( from.meta.saveScrollPosition && to.meta.saveScrollPosition) {
+      return false;
+    } else {
+      return {
+        top: 0,
+        left: 0,
+      };
+    }
+  },
 
   routes: [
     {
@@ -22,7 +39,7 @@ export const router = createRouter({
         saveScrollPosition: true,
       },
       props: true,
-      redirect: (to) => ({ name: 'meetup.description', params: to.params }),
+      redirect: ( to ) => ( { name: 'meetup.description', params: to.params } ),
       component: () => import('../views/PageMeetup'),
       children: [
         {
@@ -41,4 +58,4 @@ export const router = createRouter({
       ],
     },
   ],
-});
+} );
